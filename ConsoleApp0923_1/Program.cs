@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,23 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp0923_1
 {
+    class SingerNameComparer : IComparer
+    {
+        public int Compare(object x, object y)
+        {
+            // 이름이 크면 1, 이름이 작으면 -1, 이름이 같으면 0
+            Singer first = x as Singer;
+            Singer second = y as Singer;
+
+            if (first.Name.CompareTo(second.Name) == 1)
+                return 1;
+            else if (first.Name.CompareTo(second.Name) == -1)
+                return -1;
+            else
+                return 0;
+        }
+    }
+
     class Singer : IComparable
     {
         public string Name { get; set; }
@@ -24,15 +42,17 @@ namespace ConsoleApp0923_1
             return $"{Name} - {Age}세 - {AlbumCnt}집 앨범";
         }
 
-        public int CompareTo(object obj)    //정렬기준을 선정하기 위한 Comparable Interface정의
+        public int CompareTo(object obj)
         {
-            //나이가 크면 1, 작으면 -1, 같으면 0
+            // 나이가 크면 1, 나이가 작으면 -1, 나이가 같으면 0
             Singer sing = obj as Singer;
-            if (this.Age < sing.Age)    return 1;
-            else if (this.Age > sing.Age)   return -1;
+
+            if (this.Age > sing.Age)
+                return -1;
+            else if (this.Age < sing.Age)
+                return 1;
             else
                 return 0;
-            //throw new NotImplementedException();
         }
     }
 
@@ -53,9 +73,23 @@ namespace ConsoleApp0923_1
                 Console.WriteLine(sing.ToString());
             }
 
-            Array.Sort(singers, );
             Console.WriteLine("======================================");
             Console.WriteLine();
+
+            Array.Sort(singers); // 나이로 정렬
+
+            foreach (Singer sing in singers)
+            {
+                Console.WriteLine(sing.ToString());
+            }
+
+
+            Console.WriteLine("======================================");
+            Console.WriteLine();
+
+            SingerNameComparer nameComparer = new SingerNameComparer();
+            Array.Sort(singers, nameComparer); // 이름으로 정렬
+
             foreach (Singer sing in singers)
             {
                 Console.WriteLine(sing.ToString());
